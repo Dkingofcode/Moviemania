@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 
 const tempMovieData = [
@@ -242,8 +243,8 @@ function WatchedMovieList({ watched }) {
                   </li>
                 ))}
               </ul>
-  )
-}
+            )
+          }
 
 
 
@@ -251,10 +252,22 @@ function WatchedMovieList({ watched }) {
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+  const KEY = '';
+
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
   
+  
+   useEffect(() => {
+    const fetchMovies = async () => {
+    const res = await  fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=peakyblinders`);
+    const data = await res.json();
+     setMovies(data); 
+    }
+    fetchMovies();
+   }, []);
+
   return( 
   <>
   <Navbar>
@@ -288,4 +301,4 @@ export default function App() {
   </> 
 
   )
-}
+};
