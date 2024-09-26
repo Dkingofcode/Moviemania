@@ -64,14 +64,14 @@ export default function App() {
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState('');
+  const tempQuery = "Pea";
+  const [query, setQuery] = useState(tempQuery);
   const [selectedId, setSelectedId] = useState(null);
-  const tempQuery = "PeakyBlinders";
   
 
 
   function handleSelectMovie(id) {
-    setSelectedId((selectedMovie) => selectedMovie.id === id);
+    setSelectedId(id);
   }
 
   function handleCloseMovie() {
@@ -81,11 +81,17 @@ export default function App() {
 
   function handleAddWatched(watchedMovie) {
       setWatched((watched) =>   [...watched, watchedMovie])
+
+     // localStorage.setItem("watched", JSON.stringify([...watched, watchedMovie]));
   }
 
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id))
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
    useEffect(() => {
     const fetchMovies = async () => {
@@ -152,6 +158,7 @@ export default function App() {
          selectedId={selectedId} 
          onCloseMovie={handleCloseMovie}
          onWatchedMovie={handleAddWatched}
+           watched={watched}
          />
       ): ( 
         <> 
@@ -219,7 +226,7 @@ function Search({ query, setQuery }) {
 function NumResults({movies}) {
   return(
     <p className="num-results">
-    Found <strong>{movies.length}</strong> results
+    Found <strong>{movies?.length || 0}</strong> results
   </p>
 
 )
@@ -295,7 +302,7 @@ function Movie({ movie, onSelectMovie }){
   )
 }
 
-function MovieDetails({ selectedId, onCloseMovie, onWatchedMovie }) {
+function MovieDetails({ selectedId, onCloseMovie, onWatchedMovie, watched }) {
    const [isLoading, setIsLoading] = useState(false);
    const [movie, setMovie] = useState({});
    const [userRating, setUserRating] = useState("");
@@ -340,7 +347,7 @@ function MovieDetails({ selectedId, onCloseMovie, onWatchedMovie }) {
         countRatingDecisions: countRef.current,
      };
 
-      onAddWatched(newWatchedMovie);
+      onWatchedMovie(newWatchedMovie);
       onCloseMovie();
    }
 
@@ -354,7 +361,7 @@ function MovieDetails({ selectedId, onCloseMovie, onWatchedMovie }) {
       );
       const data = await res.json();
       setMovie(data);
-      setLoading(false);
+      setIsLoading(false);
     }
     getMovieDetails();
   }, [selectedId]);

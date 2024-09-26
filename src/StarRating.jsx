@@ -15,16 +15,6 @@ const textStyle = {
     margin: "0"
 };
 
-StarRating.propTypes = {
-    maxRating: PropTypes.number,
-    defaultRating: PropTypes.number,
-    color: PropTypes.string,
-    size: PropTypes.number,
-    messages: PropTypes.array,
-    className: PropTypes.string,
-    onSetRating: PropTypes.func
-}
-
 
 
 const StarRating = ({ 
@@ -44,6 +34,17 @@ const StarRating = ({
     setRating(rating);
     onSetRating(rating);
   }
+  StarRating.propTypes = {
+    maxRating: PropTypes.number,
+    defaultRating: PropTypes.number,
+    color: PropTypes.string,
+    size: PropTypes.number,
+    messages: PropTypes.array,
+    className: PropTypes.string,
+    onSetRating: PropTypes.func
+}
+
+
 
     return (
     <div style={containerStyle}>
